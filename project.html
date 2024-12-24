@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop KIOSK</title>
+    <style>
+        .menu-item {
+            width: 100px;
+            height: 150px;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #000;
+            display: inline-block;
+            cursor: grab;
+            text-align: center;
+        }
+        .menu-item img {
+            max-width: 100%;
+            max-height: 100px;
+        }
+        .drop-area, .remove-area {
+            width: 300px;
+            height: 300px;
+            border: 2px dashed #000;
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .areas {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Menu Items -->
+        <div class="menu-item" draggable="true" id="item1">
+            <img src="https://cdn.funshop.co.kr/products/0000076768/vs_image800.jpg" alt="Item 1">
+            <p>Item 1</p>
+            <p>₩10,000</p>
+        </div>
+        <div class="menu-item" draggable="true" id="item2">
+            <img src="https://recipe1.ezmember.co.kr/cache/recipe/2018/09/14/caddf21e43f4e734ff3ee24b8b2a4d501.jpg" alt="Item 2">
+            <p>Item 2</p>
+            <p>₩12,000</p>
+        </div>
+        <div class="menu-item" draggable="true" id="item3">
+            <img src="https://crcf.cookatmarket.com/product/images/2022/05/goli_1652342954_1865.jpg" alt="Item 3">
+            <p>Item 3</p>
+            <p>₩15,000</p>
+        </div>
+
+        <!-- Drop and Remove Areas -->
+        <div class="areas">
+            <div class="drop-area" id="dropArea">Drop Area</div>
+            <div class="remove-area" id="removeArea">Remove Area</div>
+        </div>
+    </div>
+
+    <script>
+        const items = document.querySelectorAll('.menu-item');
+        const dropArea = document.getElementById('dropArea');
+        const removeArea = document.getElementById('removeArea');
+        const container = document.querySelector('.container');
+
+        // Add dragstart event to each menu item
+        items.forEach(item => {
+            item.addEventListener('dragstart', dragStart);
+        });
+
+        // Allow items to be dropped into dropArea and removeArea
+        dropArea.addEventListener('dragover', dragOver);
+        dropArea.addEventListener('drop', drop);
+
+        removeArea.addEventListener('dragover', dragOver);
+        removeArea.addEventListener('drop', remove);
+
+        function dragStart(e) {
+            // Store the ID of the dragged item
+            e.dataTransfer.setData('text/plain', e.target.id);
+        }
+
+        function dragOver(e) {
+            // Prevent default to allow dropping
+            e.preventDefault();
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text');
+            const draggableElement = document.getElementById(id);
+            // Move the dragged item to the drop area
+            dropArea.appendChild(draggableElement);
+            draggableElement.addEventListener('dragstart', dragStart);
+        }
+
+        function remove(e) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text');
+            const draggableElement = document.getElementById(id);
+            // Move the dragged item to the remove area without hiding it
+            removeArea.appendChild(draggableElement);
+            draggableElement.addEventListener('dragstart', dragStart);
+        }
+    </script>
+</body>
+</html>
